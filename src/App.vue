@@ -23,7 +23,7 @@
 
       <!-- Modal for adding board -->
       <b-modal v-model="showModal" title="Add asdfads Board">
-        <b-form @submit.prevent="addBoard">
+        <b-form id="add-board-form" @submit.prevent="addBoard">
           <b-form-group label="Board name" label-for="board-name">
             <b-form-input
               id="board-name"
@@ -46,14 +46,15 @@
               placeholder="Board order"
             ></b-form-input>
           </b-form-group>
-
-          <template #modal-footer>
-            <b-button variant="secondary" @click="showModal = false"
-              >Bekor qilish</b-button
-            >
-            <b-button variant="primary" type="submit">Qo'shish</b-button>
-          </template>
         </b-form>
+        <template #modal-footer>
+          <b-button variant="secondary" @click="showModal = false"
+            >Bekor qilish</b-button
+          >
+          <b-button variant="primary" type="submit" form="add-board-form"
+            >Qo'shish</b-button
+          >
+        </template>
       </b-modal>
     </div>
   </div>
@@ -61,6 +62,7 @@
 
 <script>
 import ColumnCard from "./components/ColumnCard.vue";
+import api from "./api";
 
 export default {
   name: "App",
@@ -82,7 +84,20 @@ export default {
       },
     };
   },
+  mounted() {
+    this.fetchBoards();
+  },
   methods: {
+    async fetchBoards() {
+      try {
+        const res = await api.get("/boards"); // API endpoint
+        // this.boards = res.data;
+        console.log(res.data);
+      } catch (error) {
+        console.error("Fetch boards error:", error);
+      }
+    },
+
     addBoard() {
       console.log("Board qo‘shilmoqda:", this.board);
       // this.resetForm();
