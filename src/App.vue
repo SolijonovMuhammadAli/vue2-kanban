@@ -1,159 +1,100 @@
 <template>
   <div id="app">
-    <div class="flex justify-center">
-      <div class="min-h-screen flex overflow-x-scroll py-12">
-        <div
-          v-for="column in columns"
-          :key="column.title"
-          class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex justify-content-between align-items-center w-100 p-4">
+        <h1 class="h3 font-weight-bold text-dark">Kanban</h1>
+        <b-button variant="primary" @click="showModal = true"
+          >Add board</b-button
         >
-          <p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{column.title}}</p>
-          <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
-          <draggable :list="column.tasks" :animation="200" ghost-class="ghost-card" group="tasks">
-            <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
-            <task-card
-              v-for="(task) in column.tasks"
-              :key="task.id"
-              :task="task"
-              class="mt-3 cursor-move"
-            ></task-card>
-            <!-- </transition-group> -->
-          </draggable>
+      </div>
+
+      <div class="min-vh-100 d-flex overflow-auto p-4">
+        <div
+          v-for="board in boards"
+          :key="board.name"
+          class="bg-light rounded p-3 column-width mr-3"
+        >
+          <p class="text-dark font-weight-bold small">
+            {{ board.name }}
+          </p>
+          <column-card :id="board.id" />
         </div>
       </div>
+
+      <!-- Modal for adding board -->
+      <b-modal v-model="showModal" title="Add asdfads Board">
+        <b-form @submit.prevent="addBoard">
+          <b-form-group label="Board name" label-for="board-name">
+            <b-form-input
+              id="board-name"
+              v-model="board.name"
+              required
+              autofocus
+              placeholder="Enter board name"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group
+            label="Board order"
+            class="mt-2"
+            label-for="board-order"
+          >
+            <b-form-input
+              id="board-order"
+              v-model="board.order"
+              required
+              autofocus
+              placeholder="Board order"
+            ></b-form-input>
+          </b-form-group>
+
+          <template #modal-footer>
+            <b-button variant="secondary" @click="showModal = false"
+              >Bekor qilish</b-button
+            >
+            <b-button variant="primary" type="submit">Qo'shish</b-button>
+          </template>
+        </b-form>
+      </b-modal>
     </div>
   </div>
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import TaskCard from "./components/TaskCard.vue";
+import ColumnCard from "./components/ColumnCard.vue";
+
 export default {
   name: "App",
   components: {
-    TaskCard,
-    draggable
+    ColumnCard,
   },
   data() {
     return {
-      columns: [
-        {
-          title: "Backlog",
-          tasks: [
-            {
-              id: 1,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 2,
-              title: "Provide documentation on integrations",
-              date: "Sep 12"
-            },
-            {
-              id: 3,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 4,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 5,
-              title: "Test checkout flow",
-              date: "Sep 15",
-              type: "QA"
-            }
-          ]
-        },
-        {
-          title: "In Progress",
-          tasks: [
-            {
-              id: 6,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 7,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 8,
-              title: "Provide documentation on integrations",
-              date: "Sep 12",
-              type: "Backend"
-            }
-          ]
-        },
-        {
-          title: "Review",
-          tasks: [
-            {
-              id: 9,
-              title: "Provide documentation on integrations",
-              date: "Sep 12"
-            },
-            {
-              id: 10,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 11,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 12,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 13,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            }
-          ]
-        },
-        {
-          title: "Done",
-          tasks: [
-            {
-              id: 14,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 15,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 16,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            }
-          ]
-        }
-      ]
+      boards: [
+        { id: 1, name: "Unsorted", order: 1 },
+        { id: 2, name: "test", order: 2 },
+        { id: 3, name: "test 2", order: 3 },
+        { id: 4, name: "test 3", order: 4 },
+      ],
+      showModal: false,
+      board: {
+        name: "",
+        order: 0,
+      },
     };
-  }
+  },
+  methods: {
+    addBoard() {
+      console.log("Board qo‘shilmoqda:", this.board);
+      // this.resetForm();
+    },
+    resetForm() {
+      this.board = {
+        name: "",
+        order: this.boards.length + 1,
+      };
+      // this.showModal = false;
+    },
+  },
 };
 </script>
 
@@ -161,12 +102,5 @@ export default {
 .column-width {
   min-width: 320px;
   width: 320px;
-}
-/* Unfortunately @apply cannot be setup in codesandbox, 
-but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
-.ghost-card {
-  opacity: 0.5;
-  background: #F7FAFC;
-  border: 1px solid #4299e1;
 }
 </style>

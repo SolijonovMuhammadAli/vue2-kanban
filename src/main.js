@@ -1,10 +1,15 @@
 import Vue from "vue";
 import App from "./App.vue";
-import vuetify from "vuetify";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
-Vue.config.productionTip = false;
+// Bootstrap CSS
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+
+// BootstrapVue-ni faollashtirish
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 new Vue({
-  vuetify,
-  render: (h) => h(App)
+  render: (h) => h(App),
 }).$mount("#app");
