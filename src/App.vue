@@ -3,17 +3,11 @@
     <div class="d-flex flex-column align-items-center">
       <div class="d-flex justify-content-between align-items-center w-100 p-4">
         <h1 class="h3 font-weight-bold text-dark">Kanban</h1>
-        <b-button variant="primary" @click="showModal = true"
-          >Add board</b-button
-        >
+        <b-button variant="primary" @click="showModal = true"> Add board</b-button>
       </div>
 
       <div class="min-vh-100 d-flex overflow-auto p-4">
-        <div
-          v-for="board in boards"
-          :key="board.name"
-          class="bg-light rounded p-3 column-width mr-3"
-        >
+        <div v-for="board in boards" :key="board.name" class="bg-light rounded p-3 column-width mr-3">
           <p class="text-dark font-weight-bold small">
             {{ board.name }}
           </p>
@@ -33,11 +27,7 @@
               placeholder="Enter board name"
             ></b-form-input>
           </b-form-group>
-          <b-form-group
-            label="Board order"
-            class="mt-2"
-            label-for="board-order"
-          >
+          <b-form-group label="Board order" class="mt-2" label-for="board-order">
             <b-form-input
               id="board-order"
               v-model="board.order"
@@ -48,12 +38,8 @@
           </b-form-group>
         </b-form>
         <template #modal-footer>
-          <b-button variant="secondary" @click="showModal = false"
-            >Bekor qilish</b-button
-          >
-          <b-button variant="primary" type="submit" form="add-board-form"
-            >Qo'shish</b-button
-          >
+          <b-button variant="secondary" @click="showModal = false">Bekor qilish</b-button>
+          <b-button variant="primary" type="submit" form="add-board-form">Qo'shish</b-button>
         </template>
       </b-modal>
     </div>
