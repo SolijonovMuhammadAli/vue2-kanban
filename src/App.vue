@@ -103,7 +103,6 @@ export default {
         });
     },
     editShow(board) {
-      console.log(board);
       this.board = board;
       this.showModal = true;
     },

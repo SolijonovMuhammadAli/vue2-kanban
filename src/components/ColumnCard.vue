@@ -36,7 +36,6 @@ export default {
       const lead = this.leads[evt.newIndex]; // yangi joylashgan lead
       if (!lead) return;
 
-      console.log(evt.from.dataset);
       const payload = {
         lead_id: lead.id,
         cur_pos: evt.oldIndex,
