@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <div class="d-flex flex-column align-items-center">
+    <div class="">
       <div class="d-flex justify-content-between align-items-center w-100 p-4">
         <h1 class="h3 font-weight-bold text-dark">Kanban</h1>
         <b-button variant="primary" @click="showModal = true"> Add board</b-button>
       </div>
 
-      <div class="min-vh-100 d-flex overflow-auto p-4">
+      <div class="boards-wrapper d-flex flex-row overflow-x-auto p-4">
         <div v-for="board in boards" :key="board.name" class="bg-light rounded p-3 column-width mr-3">
           <div class="d-flex justify-content-between align-items-center ">
             <p class="text-dark font-weight-bold small">
@@ -131,5 +131,10 @@ export default {
 .column-width {
   min-width: 320px;
   width: 320px;
+  flex-shrink: 0;
+  min-height: 100vh;
+}
+.boards-wrapper {
+  overflow-x: auto;
 }
 </style>
