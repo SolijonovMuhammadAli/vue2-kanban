@@ -9,35 +9,47 @@
       <badge v-if="task.source">{{ task.source }}</badge>
     </div>
     <b-sidebar
+      width="80%"
       @mousedown.stop
       @touchstart.stop
       v-model="showSidebar"
-      title="commits"
+      title="Lead"
       backdrop-variant="dark"
       right
       backdrop
       shadow
     >
-      <div class="px-2">
-        <b-form @submit="onSubmit">
-          <b-form-textarea
-            id="textarea"
-            v-model="comment"
-            placeholder="Enter something..."
-            rows="2"
-            max-rows="6"
-          ></b-form-textarea>
-
-          <b-button :disabled="isSubmit" type="submit" class="mt-1 w-full" variant="primary">Submit</b-button>
-        </b-form>
-        <div v-if="isLoading" class="text-center mt-4">
-          <b-spinner label="Spinning"></b-spinner>
+      <div class="d-flex p-2">
+        <div class="w-full">
+          Lead data
         </div>
-        <ul v-else class="p-0 mt-4 ">
-          <li class="m-1 px-2 py-1 border rounded" v-for="(comment, idx) in comments" :key="idx">
-            {{ comment.body }}
-          </li>
-        </ul>
+        <div class="w-full">
+          <b-tabs content-class="mt-3">
+            <b-tab title="Commit" active>
+              <b-form @submit="onSubmit">
+                <b-form-textarea
+                  id="textarea"
+                  v-model="comment"
+                  placeholder="Enter something..."
+                  rows="2"
+                  max-rows="6"
+                ></b-form-textarea>
+
+                <b-button :disabled="isSubmit" type="submit" class="mt-1 w-full" variant="primary">Submit</b-button>
+              </b-form>
+              <div v-if="isLoading" class="text-center mt-4">
+                <b-spinner label="Spinning"></b-spinner>
+              </div>
+              <ul v-else class="p-0 mt-4 ">
+                <li class="m-1 px-2 py-1 border rounded" v-for="(comment, idx) in comments" :key="idx">
+                  {{ comment.body }}
+                </li>
+              </ul>
+            </b-tab>
+            <b-tab title="SMS"><p>SMS</p></b-tab>
+            <b-tab title="Other"><p>Other</p></b-tab>
+          </b-tabs>
+        </div>
       </div>
     </b-sidebar>
   </div>
