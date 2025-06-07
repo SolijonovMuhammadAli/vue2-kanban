@@ -1,39 +1,25 @@
 <template>
-  <div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white">
+  <div class="bg-white shadow rounded py-4 px-2 border border-white">
     <div class="flex justify-between">
-      <p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">
-        {{ task.title }}
-      </p>
+      <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm">
+        {{ task.username }}
+      </div>
     </div>
     <div class="flex mt-4 justify-between items-center">
-      <span class="text-sm text-gray-600">{{ task.date }}</span>
-      <badge v-if="task.type" :color="badgeColor">{{ task.type }}</badge>
+      <badge v-if="task.source">{{ task.source }}</badge>
     </div>
   </div>
 </template>
 <script>
 import Badge from "./Badge.vue";
 export default {
-  components: {
-    Badge,
-  },
+  components: { Badge },
   props: {
     task: {
       type: Object,
       default: () => ({}),
     },
   },
-  computed: {
-    badgeColor() {
-      const mappings = {
-        Design: "purple",
-        "Feature Request": "teal",
-        Backend: "blue",
-        QA: "green",
-        default: "teal",
-      };
-      return mappings[this.task.type] || mappings.default;
-    },
-  },
+  computed: {},
 };
 </script>

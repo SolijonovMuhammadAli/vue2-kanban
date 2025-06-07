@@ -8,16 +8,19 @@
 
       <div class="min-vh-100 d-flex overflow-auto p-4">
         <div v-for="board in boards" :key="board.name" class="bg-light rounded p-3 column-width mr-3">
-          <p class="text-dark font-weight-bold small">
-            {{ board.name }}
-          </p>
-          <column-card :id="board.id" />
+          <div class="d-flex justify-content-between align-items-center ">
+            <p class="text-dark font-weight-bold small">
+              {{ board.name }}
+            </p>
+            <button @click="editShow(board)">...</button>
+          </div>
+          <column-card :id="board.id" :data-board-id="board.id" />
         </div>
       </div>
 
       <!-- Modal for adding board -->
       <b-modal v-model="showModal" title="Add asdfads Board">
-        <b-form id="add-board-form" @submit.prevent="addBoard">
+        <b-form id="add-board-form" @submit.prevent="saveBoard">
           <b-form-group label="Board name" label-for="board-name">
             <b-form-input
               id="board-name"
@@ -39,7 +42,9 @@
         </b-form>
         <template #modal-footer>
           <b-button variant="secondary" @click="showModal = false">Bekor qilish</b-button>
-          <b-button variant="primary" type="submit" form="add-board-form">Qo'shish</b-button>
+          <b-button variant="primary" type="submit" form="add-board-form" :disabled="isSubmitLoading"
+            >Qo'shish</b-button
+          >
         </template>
       </b-modal>
     </div>
@@ -57,13 +62,9 @@ export default {
   },
   data() {
     return {
-      boards: [
-        { id: 1, name: "Unsorted", order: 1 },
-        { id: 2, name: "test", order: 2 },
-        { id: 3, name: "test 2", order: 3 },
-        { id: 4, name: "test 3", order: 4 },
-      ],
+      boards: [],
       showModal: false,
+      isSubmitLoading: false,
       board: {
         name: "",
         order: 0,
@@ -77,23 +78,41 @@ export default {
     async fetchBoards() {
       try {
         const res = await api.get("/boards"); // API endpoint
-        // this.boards = res.data;
-        console.log(res.data);
+        this.boards = res.data.result.data.boards;
       } catch (error) {
         console.error("Fetch boards error:", error);
       }
     },
 
-    addBoard() {
-      console.log("Board qo‘shilmoqda:", this.board);
-      // this.resetForm();
+    saveBoard() {
+      this.isSubmitLoading = true;
+
+      const fn = this.board.id
+        ? api.put("/boards/" + this.board.id, { name: this.board.name, order: this.board.order })
+        : api.post("/boards", { ...this.board });
+
+      fn.then(() => {
+        this.fetchBoards();
+        this.resetForm();
+      })
+        .catch((error) => {
+          console.error("Fetch boards error:", error);
+        })
+        .finally(() => {
+          this.isSubmitLoading = false;
+        });
+    },
+    editShow(board) {
+      console.log(board);
+      this.board = board;
+      this.showModal = true;
     },
     resetForm() {
       this.board = {
         name: "",
         order: this.boards.length + 1,
       };
-      // this.showModal = false;
+      this.showModal = false;
     },
   },
 };
