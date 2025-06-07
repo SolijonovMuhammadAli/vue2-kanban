@@ -12,7 +12,7 @@
             <p class="text-dark font-weight-bold small">
               {{ board.name }}
             </p>
-            <button @click="editShow(board)">...</button>
+            <button @click="editBoard(board)">...</button>
           </div>
           <column-card :id="board.id" :data-board-id="board.id" />
         </div>
@@ -41,10 +41,9 @@
           </b-form-group>
         </b-form>
         <template #modal-footer>
-          <b-button variant="secondary" @click="showModal = false">Bekor qilish</b-button>
-          <b-button variant="primary" type="submit" form="add-board-form" :disabled="isSubmitLoading"
-            >Qo'shish</b-button
-          >
+          <b-button variant="secondary" @click="resetForm">Bekor qilish</b-button>
+          <b-button variant="danger" v-if="board.id" @click="deleteBoard(board.id)">O'chirish</b-button>
+          <b-button variant="primary" type="submit" form="add-board-form" :disabled="isSubmitLoading">Saqlash</b-button>
         </template>
       </b-modal>
     </div>
@@ -102,9 +101,20 @@ export default {
           this.isSubmitLoading = false;
         });
     },
-    editShow(board) {
+    editBoard(board) {
       this.board = board;
       this.showModal = true;
+    },
+    deleteBoard(id) {
+      api
+        .delete("/boards/" + id)
+        .then(() => {
+          this.fetchBoards();
+          this.resetForm();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     resetForm() {
       this.board = {
