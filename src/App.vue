@@ -7,12 +7,25 @@
       </div>
 
       <div class="boards-wrapper d-flex flex-row overflow-x-auto p-4">
-        <div v-for="board in boards" :key="board.name" class="bg-light rounded p-3 column-width mr-3">
-          <div class="d-flex justify-content-between align-items-center ">
-            <p class="text-dark font-weight-bold small">
+        <div v-for="board in boards" :key="board.name" class=" rounded p-2 column-width mr-3">
+          <div class="d-flex justify-content-between align-items-center rounded border bg-white px-2 py-2">
+            <p class="text-dark m-0 font-weight-bold text-uppercase fw-bold ">
               {{ board.name }}
             </p>
-            <button @click="editBoard(board)">...</button>
+            <button @click="editBoard(board)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-three-dots-vertical"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"
+                />
+              </svg>
+            </button>
           </div>
           <column-card :id="board.id" />
         </div>
@@ -133,6 +146,7 @@ export default {
   width: 320px;
   flex-shrink: 0;
   min-height: 90vh;
+  background-color: #ecf2ff;
 }
 .boards-wrapper {
   overflow-x: auto;

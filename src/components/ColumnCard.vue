@@ -2,12 +2,11 @@
   <div class="column-card" :data-board-id="id">
     <div class="column-scroll" ref="scrollContainer">
       <draggable tag="div" :list="leads" :animation="200" ghost-class="ghost-card" group="tasks" @end="onDragEnd">
-        <div v-for="(lead, index) in leads" :key="lead.id" :data-id="lead.id" class="mt-3 cursor-move">
+        <div v-for="(lead, index) in leads" :key="lead.id" :data-id="lead.id" class="mt-2 cursor-move">
           <task-card :task="lead" />
           <div v-if="index === leads.length - 1 && hasMore" ref="infiniteScrollTrigger" class="h-2"></div>
         </div>
       </draggable>
-
       <div class="text-center" v-if="isLoading">
         <b-spinner />
       </div>

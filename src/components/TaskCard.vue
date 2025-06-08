@@ -1,53 +1,105 @@
 <template>
-  <div class="bg-white shadow rounded py-4 px-2 border border-white" @dblclick="onShowSidebar">
-    <div class="flex justify-between">
-      <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm">
-        {{ task.username }}
+  <div class="bg-white shadow rounded py-2 px-2 border border-white" @dblclick="onShowSidebar">
+    <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">
+      {{ task.user_name }}
+    </div>
+    <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">{{ task.comment }}</div>
+    <div class="flex justify-between items-center">
+      <div>
+        <span class="badge text-bg-light opacity-50 d-flex gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            fill="currentColor"
+            class="bi bi-calendar"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+            />
+          </svg>
+          {{ task.created_at.slice(0, 10) }}</span
+        >
+      </div>
+      <div>
+        <span class="badge text-bg-primary opacity-50">Instagram</span>
       </div>
     </div>
-    <div class="flex mt-4 justify-between items-center">
-      <badge v-if="task.source">{{ task.source }}</badge>
-    </div>
     <b-sidebar
-      width="80%"
+      width="800px"
       @mousedown.stop
       @touchstart.stop
       v-model="showSidebar"
-      title="Lead"
+      title=""
       backdrop-variant="dark"
       right
       backdrop
       shadow
     >
-      <div class="d-flex p-2">
-        <div class="w-full">
-          Lead data
+      <div class="d-flex gap-2 px-4">
+        <div style="width: 300px; height: 100px;" class="border w-full p-2 rounded bg-white">
+          <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">
+            {{ task.user_name }}
+          </div>
+          <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">{{ task.comment }}</div>
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="badge text-bg-light opacity-50 d-flex gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-calendar"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+                  />
+                </svg>
+                {{ task.created_at.slice(0, 10) }}</span
+              >
+            </div>
+            <div>
+              <span class="badge text-bg-primary opacity-50">Instagram</span>
+            </div>
+          </div>
         </div>
-        <div class="w-full">
-          <b-tabs content-class="mt-3">
-            <b-tab title="Commit" active>
+        <div class="bg-white rounded border w-full p-2">
+          <b-tabs pills card content-class="mt-3">
+            <b-tab active>
+              <template #title>
+                <span>Izohlar</span> <b-badge variant="light">{{ comments.length }}</b-badge>
+              </template>
               <b-form @submit="onSubmit">
                 <b-form-textarea
                   id="textarea"
                   v-model="comment"
                   placeholder="Enter something..."
-                  rows="2"
+                  rows="4"
                   max-rows="6"
                 ></b-form-textarea>
-
-                <b-button :disabled="isSubmit" type="submit" class="mt-1 w-full" variant="primary">Submit</b-button>
+                <div class="flex justify-end items-center">
+                  <b-button :disabled="isSubmit" type="submit" class="mt-2" variant="primary">Yuborish</b-button>
+                </div>
               </b-form>
               <div v-if="isLoading" class="text-center mt-4">
                 <b-spinner label="Spinning"></b-spinner>
               </div>
-              <ul v-else class="p-0 mt-4 ">
-                <li class="m-1 px-2 py-1 border rounded" v-for="(comment, idx) in comments" :key="idx">
-                  {{ comment.body }}
+              <ul v-else class="p-0 mt-4 overflow-auto h-full">
+                <li
+                  class="m-1 px-2 py-1 border rounded bg-red text-small"
+                  v-for="(comment, idx) in comments"
+                  :key="idx"
+                >
+                  <b-avatar variant="primary"></b-avatar>
+                  <p>{{ comment.body }}</p>
                 </li>
               </ul>
             </b-tab>
             <b-tab title="SMS"><p>SMS</p></b-tab>
-            <b-tab title="Other"><p>Other</p></b-tab>
+            <b-tab title="Boshqa"><p>Other</p></b-tab>
           </b-tabs>
         </div>
       </div>
@@ -56,9 +108,8 @@
 </template>
 <script>
 import api from "@/api";
-import Badge from "./Badge.vue";
+
 export default {
-  components: { Badge },
   data() {
     return {
       showSidebar: false,
