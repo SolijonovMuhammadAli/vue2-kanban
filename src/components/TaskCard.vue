@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white shadow rounded py-2 px-2 border border-white" @dblclick="onShowSidebar">
     <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">
-      {{ task.user_name }}
+      {{ task.username }}
     </div>
     <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">{{ task.comment }}</div>
     <div class="flex justify-between items-center">

@@ -7,7 +7,7 @@
       </div>
 
       <div class="boards-wrapper d-flex flex-row overflow-x-auto p-4">
-        <div v-for="board in boards" :key="board.name" class=" rounded p-2 column-width mr-3">
+        <div v-for="board in boards" :key="board.id" class=" rounded p-2 column-width mr-3">
           <div class="d-flex justify-content-between align-items-center rounded border bg-white px-2 py-2">
             <p class="text-dark m-0 font-weight-bold text-uppercase fw-bold ">
               {{ board.name }}
