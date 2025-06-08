@@ -1,30 +1,75 @@
+<script>
+import api from "@/api";
+
+export default {
+  data() {
+    return {
+      showSidebar: false,
+      isLoading: false,
+      isSubmit: false,
+      comments: [],
+      comment: "",
+    };
+  },
+  props: {
+    task: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  methods: {
+    onShowSidebar() {
+      this.showSidebar = true;
+      this.fetchData();
+    },
+    fetchData() {
+      this.isLoading = true;
+      api
+        .get(`/leads/${this.task.id}`)
+        .then((res) => {
+          this.comments = res.data.result.data.comments;
+        })
+        .finally(() => (this.isLoading = false));
+    },
+    onSubmit(event) {
+      event.preventDefault();
+      this.isSubmit = true;
+      api
+        .post("store-comment", {
+          lead_id: this.task.id,
+          body: this.comment,
+        })
+        .then(() => {
+          this.comment = "";
+          this.fetchData();
+        })
+        .catch((err) => console.log(err))
+        .finally(() => (this.isSubmit = false));
+    },
+  },
+  computed: {},
+};
+</script>
 <template>
-  <div class="bg-white shadow rounded py-2 px-2 border border-white" @dblclick="onShowSidebar">
-    <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">
-      {{ task.username }}
+  <div class="task_card shadow rounded borde bg-white " @dblclick="onShowSidebar">
+    <div class="task_item">
+      <b-icon font-scale="1" icon="person-fill" style="color: #00000055;"></b-icon>
+      <span class="">{{ task.username }}</span>
     </div>
-    <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">{{ task.comment }}</div>
-    <div class="flex justify-between items-center">
-      <div>
-        <span class="badge text-bg-light opacity-50 d-flex gap-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            fill="currentColor"
-            class="bi bi-calendar"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
-            />
-          </svg>
-          {{ task.created_at.slice(0, 10) }}</span
-        >
-      </div>
-      <div>
-        <span class="badge text-bg-primary opacity-50">Instagram</span>
-      </div>
+    <div class="task_item">
+      <b-icon font-scale="1" icon="pencil-square" style="color: #00000055;"></b-icon>
+      <span class="">{{ task.comment }}</span>
+    </div>
+    <div class="task_item">
+      <b-icon font-scale="1" icon="calendar2-check-fill" style="color: #00000055;"></b-icon>
+      <span> {{ task.created_at.slice(0, 10) }}</span>
+    </div>
+    <!-- <div class="task_item">
+      <b-icon font-scale="1" icon="person" style="color: #00000055;"></b-icon> {{ task.user_name }}
+    </div> -->
+
+    <div class="task_footer">
+      <span class="badge text-bg-primary opacity-50">Instagram</span>
     </div>
     <b-sidebar
       width="800px"
@@ -106,55 +151,19 @@
     </b-sidebar>
   </div>
 </template>
-<script>
-import api from "@/api";
-
-export default {
-  data() {
-    return {
-      showSidebar: false,
-      isLoading: false,
-      isSubmit: false,
-      comments: [],
-      comment: "",
-    };
-  },
-  props: {
-    task: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  methods: {
-    onShowSidebar() {
-      this.showSidebar = true;
-      this.fetchData();
-    },
-    fetchData() {
-      this.isLoading = true;
-      api
-        .get(`/leads/${this.task.id}`)
-        .then((res) => {
-          this.comments = res.data.result.data.comments;
-        })
-        .finally(() => (this.isLoading = false));
-    },
-    onSubmit(event) {
-      event.preventDefault();
-      this.isSubmit = true;
-      api
-        .post("store-comment", {
-          lead_id: this.task.id,
-          body: this.comment,
-        })
-        .then(() => {
-          this.comment = "";
-          this.fetchData();
-        })
-        .catch((err) => console.log(err))
-        .finally(() => (this.isSubmit = false));
-    },
-  },
-  computed: {},
-};
-</script>
+<style scoped>
+.task_card {
+  background-color: white;
+  padding: 16px 12px;
+}
+.task_item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.task_footer {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

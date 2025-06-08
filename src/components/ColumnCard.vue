@@ -1,19 +1,3 @@
-<template>
-  <div class="column-card" :data-board-id="id">
-    <div class="column-scroll" ref="scrollContainer">
-      <draggable tag="div" :list="leads" :animation="200" ghost-class="ghost-card" group="tasks" @end="onDragEnd">
-        <div v-for="(lead, index) in leads" :key="lead.id" :data-id="lead.id" class="mt-2 cursor-move">
-          <task-card :task="lead" />
-          <div v-if="index === leads.length - 1 && hasMore" ref="infiniteScrollTrigger" class="h-2"></div>
-        </div>
-      </draggable>
-      <div class="text-center" v-if="isLoading">
-        <b-spinner />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import draggable from "vuedraggable";
 import TaskCard from "./TaskCard.vue";
@@ -94,8 +78,8 @@ export default {
     },
 
     async onDragEnd(evt) {
-      const fromColumn = evt.from.closest(".column-card");
-      const toColumn = evt.to.closest(".column-card");
+      const fromColumn = evt.from.closest(".column_card");
+      const toColumn = evt.to.closest(".column_card");
       const draggedItemId = Number(evt.item.dataset.id);
 
       if (!fromColumn || !toColumn || !draggedItemId) {
@@ -125,8 +109,24 @@ export default {
 };
 </script>
 
+<template>
+  <div class="column_card" :data-board-id="id">
+    <div class="column-scroll" ref="scrollContainer">
+      <draggable tag="div" :list="leads" :animation="200" ghost-class="ghost-card" group="tasks" @end="onDragEnd">
+        <div v-for="(lead, index) in leads" :key="lead.id" :data-id="lead.id" class="cursor-move card_task">
+          <task-card :task="lead" />
+          <div v-if="index === leads.length - 1 && hasMore" ref="infiniteScrollTrigger" class="h-2"></div>
+        </div>
+      </draggable>
+      <div class="text-center" v-if="isLoading">
+        <b-spinner />
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
-.column-card {
+.column_card {
   height: 90vh;
   display: flex;
   flex-direction: column;
@@ -136,5 +136,8 @@ export default {
   overflow-y: auto;
   flex-grow: 1;
   padding-right: 0;
+}
+.card_task {
+  margin: 8px 16px;
 }
 </style>
