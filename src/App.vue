@@ -14,7 +14,7 @@
             </p>
             <button @click="editBoard(board)">...</button>
           </div>
-          <column-card :id="board.id" :data-board-id="board.id" />
+          <column-card :id="board.id" />
         </div>
       </div>
 
@@ -132,7 +132,7 @@ export default {
   min-width: 320px;
   width: 320px;
   flex-shrink: 0;
-  min-height: 100vh;
+  min-height: 90vh;
 }
 .boards-wrapper {
   overflow-x: auto;
