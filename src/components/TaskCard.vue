@@ -51,17 +51,32 @@ export default {
 };
 </script>
 <template>
-  <div class="task_card shadow rounded borde bg-white " @dblclick="onShowSidebar">
+  <div
+    class="task_card shadow rounded borde bg-white "
+    @dblclick="onShowSidebar"
+  >
     <div class="task_item">
-      <b-icon font-scale="1" icon="person-fill" style="color: #00000055;"></b-icon>
+      <b-icon
+        font-scale="1"
+        icon="person-fill"
+        style="color: #00000055;"
+      ></b-icon>
       <span class="">{{ task.username }}</span>
     </div>
     <div class="task_item">
-      <b-icon font-scale="1" icon="pencil-square" style="color: #00000055;"></b-icon>
+      <b-icon
+        font-scale="1"
+        icon="pencil-square"
+        style="color: #00000055;"
+      ></b-icon>
       <span class="">{{ task.comment }}</span>
     </div>
     <div class="task_item">
-      <b-icon font-scale="1" icon="calendar2-check-fill" style="color: #00000055;"></b-icon>
+      <b-icon
+        font-scale="1"
+        icon="calendar2-check-fill"
+        style="color: #00000055;"
+      ></b-icon>
       <span> {{ task.created_at.slice(0, 10) }}</span>
     </div>
     <!-- <div class="task_item">
@@ -72,73 +87,107 @@ export default {
       <span class="badge text-bg-primary opacity-50">Instagram</span>
     </div>
     <b-sidebar
-      width="800px"
+      width="1000px"
       @mousedown.stop
       @touchstart.stop
       v-model="showSidebar"
-      title=""
       backdrop-variant="dark"
       right
       backdrop
       shadow
+      class="cursor-text"
     >
-      <div class="d-flex gap-2 px-4">
-        <div style="width: 300px; height: 100px;" class="border w-full p-2 rounded bg-white">
-          <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">
+      <template #title>
+        <div class="sidebar_title ">{{ task.username }}</div>
+      </template>
+      <div class="d-flex gap-8 px-4">
+        <div
+          style="width: 500px; height: 200px"
+          class="sidebar_card shadow border rounded"
+        >
+          <div class="task_item">
+            <b-icon
+              font-scale="1"
+              icon="person-fill"
+              style="color: #00000055;"
+            ></b-icon>
+            <span class="">{{ task.username }}</span>
+          </div>
+          <div class="task_item">
+            <b-icon
+              font-scale="1"
+              icon="pencil-square"
+              style="color: #00000055;"
+            ></b-icon>
+            <span class="">{{ task.comment }}</span>
+          </div>
+          <div class="task_item">
+            <b-icon
+              font-scale="1"
+              icon="calendar2-check-fill"
+              style="color: #00000055;"
+            ></b-icon>
+            <span> {{ task.created_at.slice(0, 10) }}</span>
+          </div>
+          <div class="task_item">
+            <b-icon
+              font-scale="1"
+              icon="person"
+              style="color: #00000055;"
+            ></b-icon>
             {{ task.user_name }}
           </div>
-          <div class="text-gray-700 font-semibold font-sans tracking-wide text-sm pb-2">{{ task.comment }}</div>
-          <div class="flex justify-between items-center">
-            <div>
-              <span class="badge text-bg-light opacity-50 d-flex gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  fill="currentColor"
-                  class="bi bi-calendar"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
-                  />
-                </svg>
-                {{ task.created_at.slice(0, 10) }}</span
-              >
-            </div>
-            <div>
-              <span class="badge text-bg-primary opacity-50">Instagram</span>
-            </div>
+
+          <div class="task_footer">
+            <span class="badge text-bg-primary opacity-50">Instagram</span>
           </div>
         </div>
-        <div class="bg-white rounded border w-full p-2">
+        <div class="  w-full  ">
           <b-tabs pills card content-class="mt-3">
             <b-tab active>
               <template #title>
-                <span>Izohlar</span> <b-badge variant="light">{{ comments.length }}</b-badge>
+                <span>Izohlar</span>
+                <b-badge variant="light">{{ comments.length }}</b-badge>
               </template>
-              <b-form @submit="onSubmit">
+              <b-form
+                @mousedown.stop
+                @touchstart.stop
+                @submit="onSubmit"
+                class="bg-white py-4 px-2 shadow border rounded"
+              >
+                <label>Izoh</label>
                 <b-form-textarea
                   id="textarea"
                   v-model="comment"
-                  placeholder="Enter something..."
+                  placeholder="Eslatma uchun yozing..."
                   rows="4"
                   max-rows="6"
                 ></b-form-textarea>
                 <div class="flex justify-end items-center">
-                  <b-button :disabled="isSubmit" type="submit" class="mt-2" variant="primary">Yuborish</b-button>
+                  <b-button
+                    :disabled="isSubmit"
+                    type="submit"
+                    class="mt-2"
+                    variant="primary"
+                    >Yuborish</b-button
+                  >
                 </div>
               </b-form>
               <div v-if="isLoading" class="text-center mt-4">
                 <b-spinner label="Spinning"></b-spinner>
               </div>
-              <ul v-else class="p-0 mt-4 overflow-auto h-full">
+              <ul v-else class="comment_list">
                 <li
-                  class="m-1 px-2 py-1 border rounded bg-red text-small"
+                  class="comment_item border rounded shadow-md"
                   v-for="(comment, idx) in comments"
                   :key="idx"
                 >
-                  <b-avatar variant="primary"></b-avatar>
+                  <div class="comment_header">
+                    <span class="badge text-bg-primary ">{{
+                      comment.created_at.slice(0, 10)
+                    }}</span>
+                    <span class="opacity-50">Aliyev Shaxnoza</span>
+                  </div>
                   <p>{{ comment.body }}</p>
                 </li>
               </ul>
@@ -165,5 +214,31 @@ export default {
 .task_footer {
   display: flex;
   justify-content: flex-end;
+}
+
+.sidebar_card {
+  background-color: white;
+  padding: 16px 8px;
+  position: sticky;
+  cursor: text;
+  top: 0;
+}
+.comment_list {
+  margin: 0;
+  padding: 0;
+  margin-top: 8px;
+  /* height: 60vh; */
+  overflow-y: auto;
+}
+.comment_item {
+  padding: 4px 16px;
+  margin-bottom: 8px;
+  background-color: white;
+}
+.comment_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 </style>
