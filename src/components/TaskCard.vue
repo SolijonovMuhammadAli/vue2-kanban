@@ -18,6 +18,16 @@ export default {
     },
   },
   methods: {
+    formatDate(isoDate) {
+      const date = new Date(isoDate);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      return `${day}.${month}.${year} ${hours}:${minutes}`;
+    },
     onShowSidebar() {
       this.showSidebar = true;
       this.fetchData();
@@ -52,40 +62,35 @@ export default {
 </script>
 <template>
   <div
-    class="task_card shadow rounded borde bg-white "
+    class="lead_card shadow rounded border bg-white "
     @dblclick="onShowSidebar"
   >
-    <div class="task_item">
-      <b-icon
-        font-scale="1"
-        icon="person-fill"
-        style="color: #00000055;"
-      ></b-icon>
-      <span class="">{{ task.username }}</span>
+    <div class="lead_item">
+      <div class="lead_avater">
+        <div class="lead_image"></div>
+        <div></div>
+      </div>
+      <div class="lead_main">
+        <div class="sender_info">
+          <div class="sender_name">
+            GOMAX ONE
+            <!-- {{ task.user_name }} -->
+          </div>
+          <div class="sender_date">{{ formatDate(task.created_at) }}</div>
+        </div>
+        <div class="recipient_name">
+          Muhammadjon
+          <!-- {{ task.username }} -->
+        </div>
+        <div class="d-flex">
+          <div class="message_preview">
+            Мы приносим свои извинения, ...
+            <!-- {{ task.comment }} -->
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="task_item">
-      <b-icon
-        font-scale="1"
-        icon="pencil-square"
-        style="color: #00000055;"
-      ></b-icon>
-      <span class="">{{ task.comment }}</span>
-    </div>
-    <div class="task_item">
-      <b-icon
-        font-scale="1"
-        icon="calendar2-check-fill"
-        style="color: #00000055;"
-      ></b-icon>
-      <span> {{ task.created_at.slice(0, 10) }}</span>
-    </div>
-    <!-- <div class="task_item">
-      <b-icon font-scale="1" icon="person" style="color: #00000055;"></b-icon> {{ task.user_name }}
-    </div> -->
 
-    <div class="task_footer">
-      <span class="badge text-bg-primary opacity-50">Instagram</span>
-    </div>
     <b-sidebar
       width="1000px"
       @mousedown.stop
@@ -201,6 +206,48 @@ export default {
   </div>
 </template>
 <style scoped>
+.lead_item {
+  display: flex;
+  padding: 8px 5px;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+.lead_avater {
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.288);
+  border-radius: 50%;
+}
+.lead_main {
+  width: 100%;
+}
+.sender_info {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.sender_name {
+  color: #657786;
+  font-size: 14px;
+}
+.sender_date {
+  color: #657786;
+  font-size: 12px;
+}
+.recipient_name {
+  font-weight: bold;
+  color: #1da1f2;
+}
+.message_preview {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background-color: #e5eefd;
+  color: #14171a;
+  margin-top: 4px;
+}
 .task_card {
   background-color: white;
   padding: 16px 12px;

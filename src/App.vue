@@ -1,11 +1,13 @@
 <script>
 import ColumnCard from "./components/ColumnCard.vue";
 import api from "./api";
+import Draggable from "vuedraggable";
 
 export default {
   name: "App",
   components: {
     ColumnCard,
+    Draggable,
   },
   data() {
     return {
@@ -35,7 +37,10 @@ export default {
       this.isSubmitLoading = true;
 
       const fn = this.board.id
-        ? api.put("/boards/" + this.board.id, { name: this.board.name, order: this.board.order })
+        ? api.put("/boards/" + this.board.id, {
+            name: this.board.name,
+            order: this.board.order,
+          })
         : api.post("/boards", { ...this.board });
 
       fn.then(() => {
@@ -71,6 +76,24 @@ export default {
       };
       this.showModal = false;
     },
+    async moveColumn(itemId, newIndex) {
+      try {
+        await api.post("/column-move", {
+          item_id: itemId,
+          new_pos: newIndex,
+        });
+        await this.fetchBoards(); // Refresh boards after moving
+      } catch (error) {
+        console.error("Move column error:", error);
+      }
+    },
+    onDragEnd(event) {
+      const { oldIndex, newIndex } = event;
+      if (oldIndex !== newIndex) {
+        const movedBoard = this.boards[newIndex];
+        this.moveColumn(movedBoard.id, newIndex);
+      }
+    },
   },
 };
 </script>
@@ -80,16 +103,30 @@ export default {
     <div class="">
       <div class="d-flex justify-content-between align-items-center w-100 p-4">
         <h1 class="h3 font-weight-bold text-dark">Kanban</h1>
-        <b-button variant="primary" @click="showModal = true"> Add board</b-button>
+        <b-button variant="primary" @click="showModal = true">
+          Add board</b-button
+        >
       </div>
 
-      <div class="boards_wrapper">
-        <div v-for="board in boards" :key="board.id" class="board_column border">
-          <div class="columnn_header border shadow-sm ">
-            <div class="header_count">{{ Math.floor(Math.random(100) * 100) }}</div>
-            <p class="header_text">
-              {{ board.name }}
-            </p>
+      <draggable
+        v-model="boards"
+        tag="div"
+        class="boards_wrapper"
+        handle=".columnn_header"
+        @end="onDragEnd"
+      >
+        <div
+          v-for="board in boards"
+          :key="board.id"
+          class="board_column border"
+        >
+          <div class="columnn_header ">
+            <div class="column_wrapper">
+              <p class="header_text">
+                {{ board.name }}
+              </p>
+              <div class="header_count">Jami: 15</div>
+            </div>
 
             <div class="cursor-poniter" @click="editBoard(board)">
               <svg
@@ -108,12 +145,12 @@ export default {
           </div>
           <column-card :id="board.id" />
         </div>
-      </div>
+      </draggable>
 
       <!-- Modal for adding board -->
-      <b-modal v-model="showModal" title="Add asdfads Board">
+      <b-modal v-model="showModal" title="Board column">
         <b-form id="add-board-form" @submit.prevent="saveBoard">
-          <b-form-group label="Board name" label-for="board-name">
+          <b-form-group label="Board nomi" label-for="board-name">
             <b-form-input
               id="board-name"
               v-model="board.name"
@@ -122,20 +159,24 @@ export default {
               placeholder="Enter board name"
             ></b-form-input>
           </b-form-group>
-          <b-form-group label="Board order" class="mt-2" label-for="board-order">
-            <b-form-input
-              id="board-order"
-              v-model="board.order"
-              required
-              autofocus
-              placeholder="Board order"
-            ></b-form-input>
-          </b-form-group>
         </b-form>
         <template #modal-footer>
-          <b-button variant="secondary" @click="resetForm">Bekor qilish</b-button>
-          <b-button variant="danger" v-if="board.id" @click="deleteBoard(board.id)">O'chirish</b-button>
-          <b-button variant="primary" type="submit" form="add-board-form" :disabled="isSubmitLoading">Saqlash</b-button>
+          <b-button variant="secondary" @click="resetForm"
+            >Bekor qilish</b-button
+          >
+          <b-button
+            variant="danger"
+            v-if="board.id"
+            @click="deleteBoard(board.id)"
+            >O'chirish</b-button
+          >
+          <b-button
+            variant="primary"
+            type="submit"
+            form="add-board-form"
+            :disabled="isSubmitLoading"
+            >Saqlash</b-button
+          >
         </template>
       </b-modal>
     </div>
@@ -156,31 +197,26 @@ export default {
   margin: 8px;
   background-color: #ecf2ff;
   border-radius: 8px;
+  padding: 0;
 }
 .columnn_header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
-  padding: 16px;
+  padding: 8px 16px;
   background-color: white;
+  opacity: 0.7;
   padding-left: 28px;
-  border-radius: 0 8px 0 0;
+  border: none;
+  border-radius: 8px 8px 0 0;
 }
-.header_count {
-  position: absolute;
-  content: "";
-  top: 0;
-  left: 0;
-  height: 100%;
-  min-width: 20px;
-  padding: 8px;
-  border-radius: 4px 0 0 0;
+.column_wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgb(187, 187, 33);
-  color: white;
+  width: 100%;
 }
 .header_text {
   text-align: center;
@@ -190,7 +226,10 @@ export default {
   align-items: center;
   justify-content: center;
   margin: 0;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
+}
+.header_count {
+  font-size: 12px;
 }
 </style>
