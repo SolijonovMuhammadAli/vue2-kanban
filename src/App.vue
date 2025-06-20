@@ -12,6 +12,7 @@ export default {
   data() {
     return {
       boards: [],
+      isLoadingData: false,
       showModal: false,
       isSubmitLoading: false,
       board: {
@@ -25,11 +26,14 @@ export default {
   },
   methods: {
     async fetchBoards() {
+      this.isLoadingData = true;
       try {
         const res = await api.get("/boards"); // API endpoint
         this.boards = res.data.result.data.boards;
       } catch (error) {
         console.error("Fetch boards error:", error);
+      } finally {
+        this.isLoadingData = false;
       }
     },
 
@@ -103,17 +107,26 @@ export default {
     <div class="">
       <div class="d-flex justify-content-between align-items-center w-100 p-4">
         <h1 class="h3 font-weight-bold text-dark">Kanban</h1>
-        <b-button variant="primary" @click="showModal = true">
-          Add board</b-button
-        >
-      </div>
+        <div class="d-flex justify-content-between align-items-center gap-2">
+          <b-button variant="primary" @click="fetchBoards">
+            Yangilash
+          </b-button>
 
+          <b-button variant="primary" @click="showModal = true">
+            Add board
+          </b-button>
+        </div>
+      </div>
+      <div v-if="isLoadingData">
+        Loading...
+      </div>
       <draggable
         v-model="boards"
         tag="div"
         class="boards_wrapper"
         handle=".columnn_header"
         @end="onDragEnd"
+        v-else
       >
         <div
           v-for="board in boards"
