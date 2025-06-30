@@ -27,6 +27,7 @@ export default {
   methods: {
     async fetchBoards() {
       this.isLoadingData = true;
+      this.boards = []; // Reset boards before fetching
       try {
         const res = await api.get("/boards"); // API endpoint
         this.boards = res.data.result.data.boards;
@@ -121,12 +122,12 @@ export default {
         Loading...
       </div>
       <draggable
-        v-model="boards"
+        v-else
         tag="div"
         class="boards_wrapper"
         handle=".columnn_header"
         @end="onDragEnd"
-        v-else
+        v-model="boards"
       >
         <div
           v-for="board in boards"
